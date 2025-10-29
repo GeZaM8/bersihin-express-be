@@ -22,7 +22,7 @@ export const orders = mysqlTable("orders", {
 	weight: float().notNull(),
 	estimatedTime: datetime("estimated_time", { mode: 'string'}).notNull(),
 	rating: int().notNull(),
-	statusConfirmed: mysqlEnum("status_confirmed", ['confirmed','pending','rejected',']).notNull(),
+	statusConfirmed: mysqlEnum("status_confirmed", ['confirmed','pending','rejected']).notNull(),
 	isCompleted: tinytext("is_completed").notNull(),
 	createdAt: timestamp("created_at", { mode: 'string' }).default('current_timestamp()').notNull(),
 	updatedAt: timestamp("updated_at", { mode: 'string' }).default('current_timestamp()').notNull(),

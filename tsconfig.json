@@ -40,6 +40,14 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]     // jangan override "*" ke node_modules
+    },
+
+    
+    "typeRoots": ["./src/types", "./node_modules/@types"],
   },
   "include": ["src"]
 }

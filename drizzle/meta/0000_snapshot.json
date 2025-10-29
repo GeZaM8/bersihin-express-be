@@ -173,7 +173,21 @@
       },
       "compositePrimaryKeys": {},
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "FK_orders_users": {
+          "name": "FK_orders_users",
+          "tableFrom": "orders",
+          "tableTo": "users",
+          "columnsFrom": [
+            "id_user"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
@@ -547,7 +561,7 @@
           "tableFrom": "user_details",
           "tableTo": "users",
           "columnsFrom": [
-            "id"
+            "user_id"
           ],
           "columnsTo": [
             "id"

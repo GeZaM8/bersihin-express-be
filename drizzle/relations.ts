@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { orders, comments, orderDetails, taskLists, users, roles, userDetails } from "./schema";
+import { orders, comments, users, orderDetails, taskLists, roles, userDetails } from "./schema";
 
 export const commentsRelations = relations(comments, ({one}) => ({
 	order: one(orders, {
@@ -8,9 +8,23 @@ export const commentsRelations = relations(comments, ({one}) => ({
 	}),
 }));
 
-export const ordersRelations = relations(orders, ({many}) => ({
+export const ordersRelations = relations(orders, ({one, many}) => ({
 	comments: many(comments),
+	user: one(users, {
+		fields: [orders.idUser],
+		references: [users.id]
+	}),
 	orderDetails: many(orderDetails),
+}));
+
+export const usersRelations = relations(users, ({one, many}) => ({
+	orders: many(orders),
+	orderDetails: many(orderDetails),
+	role: one(roles, {
+		fields: [users.idRole],
+		references: [roles.id]
+	}),
+	userDetails: many(userDetails),
 }));
 
 export const orderDetailsRelations = relations(orderDetails, ({one}) => ({
@@ -32,22 +46,13 @@ export const taskListsRelations = relations(taskLists, ({many}) => ({
 	orderDetails: many(orderDetails),
 }));
 
-export const usersRelations = relations(users, ({one, many}) => ({
-	orderDetails: many(orderDetails),
-	role: one(roles, {
-		fields: [users.idRole],
-		references: [roles.id]
-	}),
-	userDetails: many(userDetails),
-}));
-
 export const rolesRelations = relations(roles, ({many}) => ({
 	users: many(users),
 }));
 
 export const userDetailsRelations = relations(userDetails, ({one}) => ({
 	user: one(users, {
-		fields: [userDetails.id],
+		fields: [userDetails.userId],
 		references: [users.id]
 	}),
 }));
