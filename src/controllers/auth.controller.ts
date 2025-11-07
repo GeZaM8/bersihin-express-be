@@ -1,19 +1,67 @@
-import { badRequest, ok } from "@/helpers/httpResponse.helper";
+import { badRequest, created, ok } from "@/helpers/HttpResponse.helper";
 import { asyncHandler } from "@/middlewares/asyncHandler";
 import { AuthService } from "@/services/auth.service";
-import { LoginRequest } from "@/types/auth.types";
-
+import { LoginRequest, RegisterRequest } from "@/types/auth.types";
 
 export class AuthController {
-  static login = asyncHandler(async (req, res) => {
-    const { username, password }: LoginRequest = req.body;
+	static login = asyncHandler(async (req, res) => {
+		const { username, password }: LoginRequest = req.body;
 
-    if (!username || !password) {
-      return badRequest(res, "Username/email dan password harus diisi");
-    }
+		if (!username || !password) {
+			return badRequest(res, "Username/email dan password harus diisi");
+		}
 
-    const result = AuthService.login({ username, password });
+		const result = await AuthService.login({ username, password });
 
-    ok(res, "Login berhasil", result);
-  });
+		ok(res, "Login berhasil", result);
+	});
+
+	static register = asyncHandler(async (req, res) => {
+		const {
+			name,
+			email,
+			username,
+			phone,
+			photo,
+			address,
+			birth,
+			password,
+			confirmPassword,
+		}: RegisterRequest = req.body;
+
+		if (
+			!name ||
+			!email ||
+			!username ||
+			!phone ||
+			!photo ||
+			!address ||
+			!birth ||
+			!password
+		) {
+			return badRequest(res, "Semua field harus diisi");
+		}
+
+		if (password.length < 8) {
+			return badRequest(res, "Password minimal 8 karakter");
+		}
+
+		if (password !== confirmPassword) {
+			return badRequest(res, "Password dan confirm password harus sama");
+		}
+
+		const result = await AuthService.register({
+			name,
+			email,
+			username,
+			phone,
+			photo,
+			address,
+			birth,
+			password,
+			confirmPassword,
+		});
+
+		created(res, "Register berhasil", result);
+	});
 }

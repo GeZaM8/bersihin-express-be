@@ -1,7 +1,6 @@
 import express from "express";
-import path from "path";
-import { authRouter } from "./routes/auth.routes";
 import { rootRouter } from "./routes/index.routes";
+import { errorHandler } from "./middlewares/errorHandler";
 // const cors = require('cors');
 const dotenv = require("dotenv");
 
@@ -11,6 +10,8 @@ const app = express();
 // app.use(cors());
 app.use(express.json());
 
-app.use("/", rootRouter);
+app.use("/api/", rootRouter);
+
+app.use(errorHandler)
 
 export default app;

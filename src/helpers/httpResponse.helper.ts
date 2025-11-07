@@ -18,3 +18,10 @@ export const ok = (res: Response, message = "Berhasil", data: any) =>
 		message,
 		data,
 	});
+
+export const created = (res: Response, message = "Berhasil", data: any) =>
+	res.status(201).json({
+		success: true,
+		message,
+		data,
+	});

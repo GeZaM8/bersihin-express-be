@@ -41,9 +41,9 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
 
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "@/*": ["src/*"]     // jangan override "*" ke node_modules
+      "@/*": ["*"]     // jangan override "*" ke node_modules
     },
 
     
