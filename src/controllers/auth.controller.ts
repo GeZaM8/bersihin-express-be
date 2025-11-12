@@ -2,9 +2,10 @@ import { badRequest, created, ok } from "@/helpers/HttpResponse.helper";
 import { asyncHandler } from "@/middlewares/asyncHandler";
 import { AuthService } from "@/services/auth.service";
 import { LoginRequest, RegisterRequest } from "@/types/auth.types";
+import { Request, Response } from "express";
 
 export class AuthController {
-	static login = asyncHandler(async (req, res) => {
+	static login = asyncHandler(async (req: Request, res: Response) => {
 		const { username, password }: LoginRequest = req.body;
 
 		if (!username || !password) {
@@ -16,7 +17,7 @@ export class AuthController {
 		ok(res, "Login berhasil", result);
 	});
 
-	static register = asyncHandler(async (req, res) => {
+	static register = asyncHandler(async (req: Request, res: Response) => {
 		const {
 			name,
 			email,

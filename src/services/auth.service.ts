@@ -1,6 +1,11 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { LoginRequest, RegisterRequest, UserType } from "@/types/auth.types";
+import {
+	LoginRequest,
+	RegisterRequest,
+	UserPayload,
+	UserType,
+} from "@/types/auth.types";
 import { db } from "@/db";
 import { roles, userDetails, users } from "@/db/schema";
 import { eq, or } from "drizzle-orm";
@@ -14,24 +19,14 @@ const JWT_EXPIRES_IN: StringValue =
 export class AuthService {
 	static async verifyToken(token: string) {
 		try {
-			const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload & {
-				id: number;
-				email: string;
-				role: string;
-			};
+			const decoded = jwt.verify(token, JWT_SECRET) as UserPayload;
 			return decoded;
 		} catch {
 			throw new Error("Token tidak valid");
 		}
 	}
 
-	static async generateToken(
-		payload: JwtPayload & {
-			id: number;
-			email: string;
-			role: string;
-		}
-	) {
+	static async generateToken(payload: UserPayload) {
 		const token = jwt.sign(payload, JWT_SECRET, {
 			expiresIn: JWT_EXPIRES_IN,
 		});

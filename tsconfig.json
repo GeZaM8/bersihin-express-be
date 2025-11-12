@@ -49,5 +49,6 @@
     
     "typeRoots": ["./src/types", "./node_modules/@types"],
   },
-  "include": ["src"]
+  "include": ["src"],
+  "files": ["src/types/express/index.d.ts"]
 }
