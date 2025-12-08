@@ -4,54 +4,58 @@ import { OrderService } from "@/services/orders.service";
 import { ok } from "@/helpers/httpResponse.helper";
 
 export class OrderController {
-	static getMyOrders = asyncHandler(async (req: Request, res: Response) => {
-		const user = req.user;
+  static getMyOrders = asyncHandler(async (req: Request, res: Response) => {
+    const user = req.user;
 
-		const orders = await OrderService.getMyOrders(user);
+    const orders = await OrderService.getMyOrders(user);
 
-		ok(res, "Berhasil", orders);
-	});
+    ok(res, "Berhasil", orders);
+  });
 
-	static getMyOrderById = asyncHandler(async (req: Request, res: Response) => {
-		const user = req.user;
-		const { id } = req.params;
+  static getMyOrderById = asyncHandler(async (req: Request, res: Response) => {
+    const user = req.user;
+    const { id } = req.params;
 
-		const order = await OrderService.getMyOrderById(user, Number(id));
+    const order = await OrderService.getMyOrderById(user, Number(id));
 
-		ok(res, "Berhasil", order);
-	});
+    ok(res, "Berhasil", order);
+  });
 
-	static createOrder = asyncHandler(async (req: Request, res: Response) => {
-		const user = req.user;
-		const data = req.body;
+  static createOrder = asyncHandler(async (req: Request, res: Response) => {
+    const user = req.user;
+    const data = req.body;
 
-		const order = await OrderService.createOrder(data, user);
+    const order = await OrderService.createOrder(data, user);
 
-		ok(res, "Berhasil", order);
-	});
+    ok(res, "Berhasil", order);
+  });
 
-	static deleteOrderById = asyncHandler(async (req: Request, res: Response) => {
-		const user = req.user;
-		const { id } = req.params;
+  static deleteOrderById = asyncHandler(async (req: Request, res: Response) => {
+    const user = req.user;
+    const { id } = req.params;
 
-		const order = await OrderService.deleteOrderById(Number(id), user);
+    const order = await OrderService.deleteOrderById(Number(id), user);
 
-		ok(res, "Berhasil", order);
-	});
+    ok(res, "Berhasil", order);
+  });
 
-	static updateOrderStatusToConfirmed = asyncHandler(async (req: Request, res: Response) => {
-		const user = req.user;
-		const { id } = req.params;
-		const { weight } = req.body;
+  static updateOrderStatusToConfirmed = asyncHandler(
+    async (req: Request, res: Response) => {
+      const user = req.user;
+      const { id } = req.params;
 
-		const order = await OrderService.updateOrderStatusToConfirmed(Number(id), Number(weight), user);
+      const order = await OrderService.updateOrderStatusToConfirmed(
+        Number(id),
+        user
+      );
 
-		ok(res, "Berhasil", order);
-	});
+      ok(res, "Berhasil", order);
+    }
+  );
 
-	static getAllOrders = asyncHandler(async (req: Request, res: Response) => {
-		const orders = await OrderService.getAllOrders();
+  static getAllOrders = asyncHandler(async (req: Request, res: Response) => {
+    const orders = await OrderService.getAllOrders();
 
-		ok(res, "Berhasil", orders);
-	});
+    ok(res, "Berhasil", orders);
+  });
 }

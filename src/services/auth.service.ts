@@ -116,4 +116,37 @@ export class AuthService {
 
 		return { id_user: result.userId };
 	}
+
+	static async updateProfile(idUser: number, data: Partial<RegisterRequest>) {
+		const [user] = await db
+			.select()
+			.from(users)
+			.where(eq(users.id, idUser))
+			.limit(1);
+
+		if (!user) throw new ApiError(404, "User tidak ditemukan");
+
+		const result = await db.transaction(async (tx) => {
+			const resultUser = await tx
+				.update(users)
+				.set(data)
+				.where(eq(users.id, idUser))
+				.execute();
+
+			if (!resultUser) throw new ApiError(500, "Update user gagal");
+
+			const resultUserDetail = await tx
+				.update(userDetails)
+				.set(data)
+				.where(eq(userDetails.userId, idUser))
+				.execute();
+
+			if (!resultUserDetail)
+				throw new ApiError(500, "Update user detail gagal");
+
+			return user;
+		});
+
+		return result;
+	}
 }

@@ -7,3 +7,4 @@ export const orderRouter = Router();
 orderRouter.use(authenticateToken);
 
 orderRouter.get("/get-my", authenticateToken, OrderController.getMyOrders);
+orderRouter.post("/create", authenticateToken, OrderController.createOrder);
