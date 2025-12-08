@@ -10,7 +10,8 @@
     "drizzle:gen": "drizzle-kit generate",
     "drizzle:push": "drizzle-kit push",
     "drizzle:studio": "drizzle-kit studio",
-    "drizzle:introspect": "drizzle-kit introspect"
+    "drizzle:introspect": "drizzle-kit introspect",
+    "drizzle:reset": "drizzle-kit reset"
   },
   "keywords": [],
   "author": "",
