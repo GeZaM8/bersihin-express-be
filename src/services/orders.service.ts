@@ -24,6 +24,10 @@ export class OrderService {
     const order = await db
       .select()
       .from(ordersTable)
+      .leftJoin(
+        orderDetailsTable,
+        eq(ordersTable.id, orderDetailsTable.idOrder)
+      )
       .where(and(eq(ordersTable.id, id), eq(ordersTable.idUser, user.id)))
       .limit(1);
 
@@ -52,7 +56,6 @@ export class OrderService {
         return db.insert(orderDetailsTable).values({
           idOrder: orderId,
           idTasks: detail.idTasks,
-          idUser: user.id,
           isCompleted: "false",
         });
       })
@@ -89,7 +92,11 @@ export class OrderService {
     return { orders };
   }
 
-  static async updateOrderStatusToConfirmed(id: number, user: UserPayload) {
+  static async updateOrderStatusToConfirmed(
+    id: number,
+    weight: number,
+    user: UserPayload
+  ) {
     const order = await db
       .select()
       .from(ordersTable)
@@ -107,9 +114,36 @@ export class OrderService {
 
     await db
       .update(ordersTable)
-      .set({ statusConfirmed: "confirmed" })
+      .set({ statusConfirmed: "confirmed", weight: weight })
       .where(eq(ordersTable.id, id));
 
     return { order };
+  }
+
+  static async applyTask(idOrder: number, idTask: number, idUser: number) {
+    const orderDetail = await db
+      .select()
+      .from(orderDetailsTable)
+      .where(
+        and(
+          eq(orderDetailsTable.idOrder, idOrder),
+          eq(orderDetailsTable.idTasks, idTask)
+        )
+      )
+      .limit(1);
+
+    if (!orderDetail) throw new ApiError(404, "Order detail not found");
+
+    await db
+      .update(orderDetailsTable)
+      .set({ idUser: idUser })
+      .where(
+        and(
+          eq(orderDetailsTable.idOrder, idOrder),
+          eq(orderDetailsTable.idTasks, idTask)
+        )
+      );
+
+    return { orderDetail };
   }
 }

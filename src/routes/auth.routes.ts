@@ -10,6 +10,7 @@ const upload = multer();
 authRouter.post("/login", upload.none(), AuthController.login);
 authRouter.post("/register", upload.none(), AuthController.register);
 
+authRouter.get("/profile", authenticateToken, AuthController.getProfile);
 authRouter.post(
   "/update-profile",
   authenticateToken,

@@ -59,6 +59,14 @@ export class AuthController {
     created(res, "Register berhasil", result);
   });
 
+  static getProfile = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.user;
+
+    const result = await AuthService.getProfile(Number(id));
+
+    ok(res, "Get profile berhasil", result);
+  });
+
   static updateProfile = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.user;
     const data = req.body;

@@ -32,7 +32,7 @@ export const orderDetails = mysqlTable("order_details", {
 	id: int().autoincrement().notNull().primaryKey(),
 	idOrder: int("id_order").notNull().references(() => orders.id, { onDelete: "cascade", onUpdate: "cascade" } ),
 	idTasks: int("id_tasks").notNull().references(() => taskLists.id, { onDelete: "cascade", onUpdate: "cascade" } ),
-	idUser: int("id_user").notNull().references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" } ),
+	idUser: int("id_user").references(() => users.id, { onDelete: "cascade", onUpdate: "cascade" } ),
 	isCompleted: tinytext("is_completed").notNull(),
 	createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),
 	updatedAt: timestamp("updated_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`).notNull(),

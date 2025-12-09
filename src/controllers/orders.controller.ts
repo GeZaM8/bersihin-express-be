@@ -43,9 +43,11 @@ export class OrderController {
     async (req: Request, res: Response) => {
       const user = req.user;
       const { id } = req.params;
+      const { weight } = req.body;
 
       const order = await OrderService.updateOrderStatusToConfirmed(
         Number(id),
+        weight,
         user
       );
 
@@ -57,5 +59,18 @@ export class OrderController {
     const orders = await OrderService.getAllOrders();
 
     ok(res, "Berhasil", orders);
+  });
+
+  static applyTask = asyncHandler(async (req: Request, res: Response) => {
+    const user = req.user;
+    const { idOrder, idTask } = req.params;
+
+    const order = await OrderService.applyTask(
+      Number(idOrder),
+      Number(idTask),
+      user.id
+    );
+
+    ok(res, "Berhasil", order);
   });
 }
