@@ -1,5 +1,5 @@
-import { UserPayload } from "@/types/auth.types";
-import { OrderRequest } from "@/types/orders.types";
+import { UserPayload } from "../types/auth.types";
+import { OrderRequest } from "../types/orders.types";
 export declare class OrderService {
     static getMyOrders(user: UserPayload): Promise<{
         orders: {

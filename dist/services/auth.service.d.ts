@@ -1,4 +1,4 @@
-import { LoginRequest, RegisterRequest, UserPayload, UserType } from "@/types/auth.types";
+import { LoginRequest, RegisterRequest, UserPayload, UserType } from "../types/auth.types";
 export declare class AuthService {
     static verifyToken(token: string): Promise<UserPayload>;
     static generateToken(payload: UserPayload): Promise<string>;

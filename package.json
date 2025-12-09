@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/server.ts",
-    "build": "tsc",
-    "start": "node dist/src/server.js",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/server.js",
     "drizzle:gen": "drizzle-kit generate",
     "drizzle:push": "drizzle-kit push",
     "drizzle:studio": "drizzle-kit studio",
@@ -23,6 +23,7 @@
     "drizzle-orm": "^0.44.7",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
     "multer": "^2.0.2",
     "mysql2": "^3.15.3"
   },
@@ -36,8 +37,12 @@
     "drizzle-kit": "^0.31.6",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
+  },
+  "_moduleAliases": {
+    "@": "dist"
   }
 }

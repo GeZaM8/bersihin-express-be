@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderController = void 0;
-const asyncHandler_1 = require("@/middlewares/asyncHandler");
-const orders_service_1 = require("@/services/orders.service");
-const httpResponse_helper_1 = require("@/helpers/httpResponse.helper");
+const asyncHandler_1 = require("../middlewares/asyncHandler");
+const orders_service_1 = require("../services/orders.service");
+const httpResponse_helper_1 = require("../helpers/httpResponse.helper");
 class OrderController {
     static getMyOrders = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
         const user = req.user;

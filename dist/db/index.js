@@ -37,7 +37,7 @@ exports.db = void 0;
 require("dotenv/config");
 const mysql2_1 = require("drizzle-orm/mysql2");
 const promise_1 = require("mysql2/promise");
-const schema = __importStar(require("@/db/schema"));
+const schema = __importStar(require("../db/schema"));
 const pool = (0, promise_1.createPool)({
     uri: process.env.DATABASE_URL ?? "",
 });

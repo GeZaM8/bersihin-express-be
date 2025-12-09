@@ -1,4 +1,4 @@
-import { userDetails, users } from "@/db/schema";
+import { userDetails, users } from "../db/schema";
 import { JwtPayload } from "jsonwebtoken";
 export type UserPayload = JwtPayload & {
     id: number;

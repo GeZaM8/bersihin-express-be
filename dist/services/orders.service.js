@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrderService = void 0;
-const db_1 = require("@/db");
-const schema_1 = require("@/db/schema");
-const ApiError_1 = require("@/helpers/ApiError");
+const db_1 = require("../db");
+const schema_1 = require("../db/schema");
+const ApiError_1 = require("../helpers/ApiError");
 const drizzle_orm_1 = require("drizzle-orm");
 class OrderService {
     // Pelanggan
