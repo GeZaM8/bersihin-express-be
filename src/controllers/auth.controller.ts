@@ -70,6 +70,7 @@ export class AuthController {
   static updateProfile = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.user;
     const data = req.body;
+    console.log(data);
 
     const result = await AuthService.updateProfile(Number(id), data);
 

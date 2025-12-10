@@ -117,7 +117,6 @@ export class AuthService {
     return { id_user: result.userId };
   }
 
-
   static async getProfile(idUser: number) {
     const [user] = await db
       .select()
@@ -130,7 +129,7 @@ export class AuthService {
     return user;
   }
 
-  static async updateProfile(idUser: number, data: Partial<RegisterRequest>) {
+  static async updateProfile(idUser: number, data: any) {
     const [user] = await db
       .select()
       .from(users)
@@ -139,25 +138,47 @@ export class AuthService {
 
     if (!user) throw new ApiError(404, "User tidak ditemukan");
 
+    // Pisahkan field untuk tabel users dan user_details
+    const userData = {
+      email: data.email,
+      username: data.username,
+    };
+
+    const detailData = {
+      name: data.name,
+      address: data.address,
+      phone: data.phone,
+      birth: data.birth,
+      photo: data.photo,
+    };
+
     const result = await db.transaction(async (tx) => {
-      const resultUser = await tx
+      await tx
         .update(users)
-        .set(data)
+        .set(userData)
         .where(eq(users.id, idUser))
         .execute();
 
-      if (!resultUser) throw new ApiError(500, "Update user gagal");
-
-      const resultUserDetail = await tx
-        .update(userDetails)
-        .set(data)
+      const [detail] = await tx
+        .select()
+        .from(userDetails)
         .where(eq(userDetails.userId, idUser))
-        .execute();
+        .limit(1);
 
-      if (!resultUserDetail)
-        throw new ApiError(500, "Update user detail gagal");
+      if (detail) {
+        await tx
+          .update(userDetails)
+          .set(detailData)
+          .where(eq(userDetails.userId, idUser))
+          .execute();
+      } else {
+        await tx.insert(userDetails).values({
+          userId: idUser,
+          ...detailData,
+        });
+      }
 
-      return user;
+      return { ...user, ...detailData };
     });
 
     return result;

@@ -2,11 +2,12 @@ import { db } from "@/db";
 import {
   orders as ordersTable,
   orderDetails as orderDetailsTable,
+  taskLists as taskListsTable,
 } from "@/db/schema";
 import { ApiError } from "@/helpers/ApiError";
 import { UserPayload } from "@/types/auth.types";
 import { OrderRequest, OrderType } from "@/types/orders.types";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 export class OrderService {
   // Pelanggan
@@ -20,18 +21,33 @@ export class OrderService {
     return { orders };
   }
 
-  static async getMyOrderById(user: UserPayload, id: number) {
-    const order = await db
+  static async getOrderById(id: number) {
+    const [order] = await db
       .select()
       .from(ordersTable)
-      .leftJoin(
-        orderDetailsTable,
-        eq(ordersTable.id, orderDetailsTable.idOrder)
-      )
-      .where(and(eq(ordersTable.id, id), eq(ordersTable.idUser, user.id)))
+      .where(eq(ordersTable.id, id))
       .limit(1);
 
-    return { order };
+    if (!order) return null;
+
+    const rows = await db
+      .select({
+        detail: orderDetailsTable,
+        task: taskListsTable,
+      })
+      .from(orderDetailsTable)
+      .leftJoin(
+        taskListsTable,
+        eq(orderDetailsTable.idTasks, taskListsTable.id)
+      )
+      .where(eq(orderDetailsTable.idOrder, id));
+
+    const details = rows.map((r) => ({
+      ...r.detail,
+      task: r.task ?? null,
+    }));
+
+    return { ...order, details };
   }
 
   static async createOrder(data: OrderRequest, user: UserPayload) {
@@ -41,7 +57,6 @@ export class OrderService {
         name: data.name,
         message: data.message ?? "",
         weight: data.weight ?? 0,
-        estimatedTime: data.estimatedTime ?? new Date(),
         rating: 0,
         statusConfirmed: "pending",
         isCompleted: "false",
@@ -87,8 +102,11 @@ export class OrderService {
   }
 
   // Kasir
-  static async getAllOrders() {
-    const orders = await db.select().from(ordersTable);
+  static async getAllPendingOrders() {
+    const orders = await db
+      .select()
+      .from(ordersTable)
+      .where(eq(ordersTable.statusConfirmed, "pending"));
     return { orders };
   }
 
@@ -120,27 +138,36 @@ export class OrderService {
     return { order };
   }
 
-  static async applyTask(idOrder: number, idTask: number, idUser: number) {
+  static async getForKaryawan() {
+    const orders = await db
+      .select()
+      .from(ordersTable)
+      .where(eq(ordersTable.statusConfirmed, "confirmed"));
+    return { orders };
+  }
+
+  static async applyTask(idOrder: number, tasks: number[], idUser: number) {
+    console.log(tasks);
     const orderDetail = await db
       .select()
       .from(orderDetailsTable)
       .where(
         and(
           eq(orderDetailsTable.idOrder, idOrder),
-          eq(orderDetailsTable.idTasks, idTask)
+          inArray(orderDetailsTable.idTasks, tasks)
         )
-      )
-      .limit(1);
+      );
 
-    if (!orderDetail) throw new ApiError(404, "Order detail not found");
+    if (orderDetail.length === 0)
+      throw new ApiError(404, "Order detail not found");
 
     await db
       .update(orderDetailsTable)
-      .set({ idUser: idUser })
+      .set({ idUser })
       .where(
         and(
           eq(orderDetailsTable.idOrder, idOrder),
-          eq(orderDetailsTable.idTasks, idTask)
+          inArray(orderDetailsTable.idTasks, tasks)
         )
       );
 

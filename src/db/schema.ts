@@ -20,7 +20,7 @@ export const orders = mysqlTable("orders", {
 	name: varchar({ length: 255 }).notNull(),
 	message: text().default('NULL'),
 	weight: float().notNull(),
-	estimatedTime: datetime("estimated_time", { mode: 'string'}).notNull(),
+	estimatedTime: datetime("estimated_time", { mode: 'string'}),
 	rating: int().notNull(),
 	statusConfirmed: mysqlEnum("status_confirmed", ['confirmed','pending','rejected']).notNull(),
 	isCompleted: tinytext("is_completed").notNull(),

@@ -10,7 +10,16 @@ orderRouter.get("/get-my", authenticateToken, OrderController.getMyOrders);
 orderRouter.post("/create", authenticateToken, OrderController.createOrder);
 
 // Kasir
-orderRouter.get("/get-all", OrderController.getAllOrders);
+orderRouter.get(
+  "/get-all-pending",
+  authenticateToken,
+  OrderController.getAllPendingOrders
+);
+orderRouter.get(
+  "/get-for-karyawan",
+  authenticateToken,
+  OrderController.getForKaryawan
+);
 orderRouter.put(
   "/update-status/:id",
   OrderController.updateOrderStatusToConfirmed
@@ -18,7 +27,9 @@ orderRouter.put(
 
 // Kasir
 orderRouter.put(
-  "/apply-task/:idOrder/:idTask",
+  "/apply-task/:idOrder",
   authenticateToken,
   OrderController.applyTask
 );
+
+orderRouter.get("/:id", authenticateToken, OrderController.getOrderById);

@@ -12,11 +12,10 @@ export class OrderController {
     ok(res, "Berhasil", orders);
   });
 
-  static getMyOrderById = asyncHandler(async (req: Request, res: Response) => {
-    const user = req.user;
+  static getOrderById = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const order = await OrderService.getMyOrderById(user, Number(id));
+    const order = await OrderService.getOrderById(Number(id));
 
     ok(res, "Berhasil", order);
   });
@@ -55,21 +54,26 @@ export class OrderController {
     }
   );
 
-  static getAllOrders = asyncHandler(async (req: Request, res: Response) => {
-    const orders = await OrderService.getAllOrders();
+  static getAllPendingOrders = asyncHandler(
+    async (req: Request, res: Response) => {
+      const orders = await OrderService.getAllPendingOrders();
+
+      ok(res, "Berhasil", orders);
+    }
+  );
+
+  static getForKaryawan = asyncHandler(async (req: Request, res: Response) => {
+    const orders = await OrderService.getForKaryawan();
 
     ok(res, "Berhasil", orders);
   });
 
   static applyTask = asyncHandler(async (req: Request, res: Response) => {
     const user = req.user;
-    const { idOrder, idTask } = req.params;
+    const { tasks } = req.body;
+    const { idOrder } = req.params;
 
-    const order = await OrderService.applyTask(
-      Number(idOrder),
-      Number(idTask),
-      user.id
-    );
+    const order = await OrderService.applyTask(Number(idOrder), tasks, user.id);
 
     ok(res, "Berhasil", order);
   });
